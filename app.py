@@ -42,6 +42,52 @@ class WebScraper:
                              ignored_exceptions=[NoSuchElementException, ElementNotVisibleException, ElementNotSelectableException])
         return driver, wait
 
+    def _verificar_elemento_existe(self, xpath):
+        """
+        Verifica se um elemento está presente na página.
+
+        :param xpath: XPath do elemento a ser verificado.
+        :return: True se o elemento estiver presente, False caso contrário.
+        """
+        try:
+            self.wait.until(expected_conditions.visibility_of_element_located((By.XPATH, xpath)))
+            return True
+        except TimeoutException:
+            return False
+
+    def _obter_descricao_item(self):
+        """
+        Obtém a descrição do item da página.
+
+        :return: Descrição do item.
+        """
+        return self.wait.until(expected_conditions.visibility_of_element_located((By.XPATH, '//h1[@class="topoDetalhe-boxRight-nome"]'))).text
+
+    def _obter_preco_item(self):
+        """
+        Obtém o preço do item da página.
+
+        :return: Preço do item.
+        """
+        return self.wait.until(expected_conditions.visibility_of_element_located((By.XPATH, '//span[@class="topoDetalhe-boxRight-precoDe show-for-large"]'))).text
+
+    def _formatar_preco(self, preco):
+        """
+        Formata o preço removendo caracteres não numéricos e substituindo a vírgula por ponto.
+
+        :param preco: Preço original.
+        :return: Preço formatado.
+        """
+        return re.sub(r"[^0-9,]", "", preco).replace(',', '.')
+    
+    def _verificar_disponibilidade_compra(self):
+        """
+        Verifica a disponibilidade do produto para compra.
+
+        :return: 'SIM' ou 'NÃO'.
+        """
+        return 'SIM' if self._verificar_elemento_existe('//div[@class="botao-de-compra"]//button[@class="botaoComprar"]') else 'NÃO'
+
     def _obter_dados_produto(self):
         """
         Obtém os dados do produto da página web.
@@ -62,53 +108,7 @@ class WebScraper:
             "Link do Produto": self.url
         }
         return dados
-
-    def _obter_descricao_item(self):
-        """
-        Obtém a descrição do item da página.
-
-        :return: Descrição do item.
-        """
-        return self.wait.until(expected_conditions.visibility_of_element_located((By.XPATH, '//h1[@class="topoDetalhe-boxRight-nome"]'))).text
-
-    def _obter_preco_item(self):
-        """
-        Obtém o preço do item da página.
-
-        :return: Preço do item.
-        """
-        return self.wait.until(expected_conditions.visibility_of_element_located((By.XPATH, '//span[@class="topoDetalhe-boxRight-precoDe show-for-large"]'))).text
-
-    def _verificar_disponibilidade_compra(self):
-        """
-        Verifica a disponibilidade do produto para compra.
-
-        :return: 'SIM' ou 'NÃO'.
-        """
-        return 'SIM' if self._verificar_elemento_existe('//div[@class="botao-de-compra"]//button[@class="botaoComprar"]') else 'NÃO'
-
-    def _verificar_elemento_existe(self, xpath):
-        """
-        Verifica se um elemento está presente na página.
-
-        :param xpath: XPath do elemento a ser verificado.
-        :return: True se o elemento estiver presente, False caso contrário.
-        """
-        try:
-            self.wait.until(expected_conditions.visibility_of_element_located((By.XPATH, xpath)))
-            return True
-        except TimeoutException:
-            return False
-
-    def _formatar_preco(self, preco):
-        """
-        Formata o preço removendo caracteres não numéricos e substituindo a vírgula por ponto.
-
-        :param preco: Preço original.
-        :return: Preço formatado.
-        """
-        return re.sub(r"[^0-9,]", "", preco).replace(',', '.')
-
+    
     def salvar_dados(self):
         """
         Salva os dados coletados em um arquivo Excel. Se o arquivo já existir, os dados novos são adicionados aos existentes.
