@@ -2,7 +2,7 @@
 
 ## Descrição do Projeto 📋
 
-Este projeto consiste em um robô desenvolvido em Python para monitorar os preços do suplemento alimentar CREATINA MONOHIDRATADA 250G em um site de e-commerce. O robô coleta o preço do produto a cada 30 minutos e atualiza uma planilha Excel com as informações coletadas.
+Este projeto consiste em um robô desenvolvido em Python para monitorar o preço do suplemento alimentar CREATINA MONOHIDRATADA 250G em um site de e-commerce. O robô coleta o preço do produto a cada 30 minutos e atualiza uma planilha Excel com as informações coletadas.
 
 ## Funcionalidades ⚙️
 
